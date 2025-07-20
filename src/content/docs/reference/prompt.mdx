@@ -1,0 +1,75 @@
+---
+title: Prompt
+---
+I want to track time. 
+
+## WorkEntry
+The basic unit of work is a `WorkEntry` (a record in the `Work` table), which consists of
+
+* a description 
+    * this freeform markdown entry serves the same purpose as a commit message
+    * the first line is the title of the time entry
+    * it can be edited
+    * it can be null until the time entry is finished (i.e. the end time is set)
+    * hashtags are used to add labels/tags
+* an owner (person who does the work, not null)
+* a start time (not null)
+* an end time (null if the time entry is still active)
+* a task (not null)
+
+## Task
+
+A task is a larger unit of work—a container for work entries. It includes 
+
+* a title, 
+* a description, 
+* an owner (assigned person),
+* an estimated time (hours), 
+* a status (new, in-progress, complete, canceled, paused, blocked),
+* a start date, (*may* be null if the task is not started yet)
+* an end date, (null if the task is not finished yet)
+* a due date, (may be null)
+* a parent project
+
+## Labels/Tags
+
+A task or time entry can have zero or more labels/tags. In the UI, these can be added with hashtags in the description, or as a separate field. The database might store them as a list of strings or a many-to-many relationship.
+
+## Project
+
+A project is a container for tasks and sub-projects. It includes 
+* a title, 
+* a description, 
+* an owner, 
+* a time budget (maximum hours allowed), 
+* a start date, (may be null if the project is not started yet)
+* an end date, (null if the project is not finished yet)
+* a due date, (may be null)
+* a status (new, in-progress, complete, canceled, paused, blocked)
+* a parent project (null if it is a top-level project)
+
+## Dependencies
+
+A task or project can depend on other tasks/projects—it cannot start until those are complete.
+This is a many-to-many relationship.
+
+How is a Project related to a Task? Is a Project just a task with more metadata? Does it make sense in this context for a task to have sub-tasks, or is that the distinction: a Task is a leaf node in the hierarchy, and a Project is a container? Can something be stubbed as a task, and then later be expanded into a project?
+
+All of the fields are the same for a Task and a Project. A minor difference is that a Project has a time budget, and a Task has an estimated time—that is only a difference in interpretation. A Project is a container for tasks, and a Task is a container for time entries (work).
+
+A Project has additional documentation, such as a charter, a plan, a roadmap, and associated stakeholders, but these are not needed for tracking time. Stakeholders are needed only for the communication system, which is separate from time tracking.
+
+Maybe we can add a "type" field to the "Workables" table, and use that to distinguish them??? at the very least, we should ensure that the primary key (id) is unique across Project and Task.
+
+Conclusion: a Project is a Task with more metadata that is not needed for tracking time. In the context of time tracking, a Task is a leaf node that contains only time entries (work).
+
+## Stakeholders
+
+Stakeholders can be associated with a Project in the following ways:
+* responsible—one or more people who do the work
+* accountable—exactly one person who "owns" the project and decides when it is done, when it has met its chartered goals.
+* consulted—zero or more people who contribute as subject matter experts and support the responsible/accountable persons
+* informed—zero or more people who may be interested in the progress and outcome but do not influence it directly.
+
+## People
+A person is a user of the system. The system needs to know their name, email address, phone number, and avatar.

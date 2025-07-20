@@ -1,0 +1,107 @@
+---
+title: User Stories
+description: What can the user do?
+---
+## As a user, I want to be able to track the time I spend on projects.
+
+A time entry is a record of the time I spend on a task.
+It has an owner—the person who did the work.
+It is associated with a task.
+It includes a start time, an end time, and a (calculated) duration.
+It is associated with an activity (type of work/tag/label).
+It should include editable note (body).
+
+The body of a time entry can be edited.
+It serves as a journal entry like a commit message.
+It is formatted with Markdown.
+It can include links to external resources.
+It can include attachments.
+
+
+## When a user logs in, they see a dashboard.
+The dashboard shows a list of active projects with their status.
+The status is a combination of important features:
+* project name
+* owner
+* overall health and progress
+* recent activity
+* important notifications (messsages from other users)
+* warnings of potential issues, e.g. tasks that are behind schedule/over budget/overdue/not being worked on
+
+Clicking on a project card shows the project details page.
+
+The project detail page shows:
+* short description of the project
+* summary statistics for all time and for the current sprint
+* progress and health of the project
+* a list of tasks and sub-projects, represented as cards in columns of a kanban board.
+The tasks/sub-projects are in one of the following states (i.e. columns of the kanban board):
+* Not Started
+* Ready
+* In Progress
+* Done
+* Blocked
+* On Hold
+* Cancelled
+
+Tasks that are behind schedule or overdue or otherwise problematic are highlighted.
+Each task card has:
+* the name of the task
+* an avatar with the name of the last person who worked on the task
+* the progress based on sum of time entries vs. estimated duration
+* a button that shows more details in place (summary view of last 3 time entries)
+* a button to go to a detail/edit page.
+* a button to add a new time entry (i.e. start working on the task) or to end an active time entry (i.e. stop working on the task).
+* an icon showing unread notifications with the number of such. Clicking on it shows a list of notifications.
+
+
+
+
+## As a user, I want to manage a list of projects.
+A project is a bundle of work. It consists of tasks and sub-projects.
+Projects can be nested. A task can be promoted to a project.
+
+A project can be instantiated from a template. A template is a project that can be used as a starting point for a new project. It usually contains a list of tasks that are common to many projects. I need to be able to create a new project from a template. I need to be able to turn a project into a template (but not back). Turning a project into a template should not affect the project it was turned from, but any time entries in the project will NOT be included in the template.
+
+## As a user, I want to be able to add a new project.
+A project has a parent project, a name, a description, a start date, and an end date.
+Start and end date are optional.
+Top-level projects are children of the root project.
+A project can be active or inactive.
+An active project is one that is currently being worked on.
+An inactive project is one that is no longer being worked on.
+An inactive project can be reactivated.
+An inactive project can be archived.
+
+
+## As a user, I want to be able to edit a project.
+## As a user, I want to be able to archive a project.
+
+## As a user, I want to manage a list of tasks.
+A task is a unit of work that I can track the time I spend on.
+A task has a name, a description, and an estimated duration.
+It may have a list of dependencies—tasks that must be completed before it can be started.
+A task can be split into two tasks—a part that is already done and a part that is not yet done.
+The estimated duration of a task can be changed. These changes are tracked: who made the change, when it was made, the justification for the change, and the new estimated duration.
+
+
+
+
+## As a user, I want to be able to refer to activities by name.
+An activity is a named thing that categorizes the time I spend. 
+Activities are created dynamically by referring to them by name. 
+Examples include: 
+
+* reading documentation
+* writing documentation
+* writing code
+* debugging code
+* testing code
+* refactoring code
+* writing tests
+* sleeping
+* taking a break
+* communicating
+* planning
+* meeting
+

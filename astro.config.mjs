@@ -4,6 +4,9 @@ import starlight from '@astrojs/starlight';
 
 // https://astro.build/config
 export default defineConfig({
+	site: 'https://time-thing.t11y.dev/',
+	trailingSlash: 'always',
+	base: '/',
 	integrations: [
 		starlight({
 			title: 'TimeThing Docs',
@@ -24,4 +27,5 @@ export default defineConfig({
 			],
 		}),
 	],
+
 });
