@@ -50,6 +50,24 @@ All commands are run from the root of the project, from a terminal:
 | `bun astro -- --help` | Get help using the Astro CLI                     |
 
 
+initial push to GitHub:
+```bash
+gh repo create --public time-thing
+jj git remote add origin git@github.com:terrelcodes/time-thing.git
+jj ci # edit commit message and create a new changeset
+jj bookmark set main -r @- --allow-backwards
+jj git push --allow-new
+```
+
+subsequent pushes:
+```bash
+jj ci #edit commit message and create new changeset
+jj bookmark set main -r @- 
+jj git push
+```
+
+
+
 ## 👀 Want to learn more?
 
 Check out [Starlight’s docs](https://starlight.astro.build/), read [the Astro documentation](https://docs.astro.build), or jump into the [Astro Discord server](https://astro.build/chat).
