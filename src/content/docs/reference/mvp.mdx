@@ -1,0 +1,94 @@
+---
+title: MVP
+description: The minimum viable product
+---
+
+## MVP
+
+The MVP is a simple time tracking system that allows users to track their time spent on tasks.
+(This could be as simple as a Tier 1 project.)
+
+## Features
+
+- [ ] CRUD for Projects (Projects are collections of Tasks and Sub-Projects)
+- [ ] CRUD for Tasks (Tasks are leaf nodes in the hierarchy)
+- [ ] CRUD for WorkEntries (WorkEntries are the basic unit of work)
+
+## Data model
+
+* User -- created by the system when the user signs up. Separate from but used by authentication system.
+    * id
+    * username (string) (unique, not null)
+    * display_name (string) (nullable)
+    * email (string) (unique, not null)
+    * avatar (string) (nullable)
+
+* Task
+    * id
+    * owner_id (FK to User.id) (not null)
+    * parent_id (FK to Task.id) (null if it is a top-level task)
+    * is_project (boolean) (not null, default false)
+    * is_pinned (boolean) (not null, default false)
+    * name (string) (not null)
+    * description (string) (nullable)
+    * start_date (date) (nullable) -- if null, this is set by the system when the first work entry is created.
+    * end_date (date) (nullable) -- if null, this is set by the system when task is marked as completed.
+    * due_date (date) (nullable) 
+    * estimated_time (integer) (nullable) 
+    * status (enum "new", "in_progress", "blocked", "completed", "cancelled") (not null, default "new")
+
+* WorkEntry
+    * id
+    * owner_id (FK to User.id) (not null)
+    * task_id (FK to Task.id) (not null) -- can be changed by the user.
+    * start_time (unix UTC timestamp in seconds) (not null) -- set by the system when the work entry is created.
+    * end_time (unix UTC timestamp in seconds) (nullable) -- set by the user any time before end_time is set.
+    * description (string) (nullable) -- cannot be null if end_time is set.
+    * duration (integer) (nullable) -- time in seconds set by the system when end_time is set.
+
+## Default data
+
+When a user signs up, a new top-level (root) project is created for them.
+This project name is "\{user.display_name\}'s Work" or "My Work" if `display_name` is not set.
+It contains the following Tasks:
+
+- "Read Onboarding Tutorial"
+- "Manage projects and tasks"
+
+## UI
+
+The UI should be simple and easy to use.
+
+The header bar includes any active WorkEntries. There should normally be only one. This is a quick way to see what the user is working on. `<Task/WorkEntry Name> <Elapsed Time> <Start/Stop>`
+
+The main view is a list of tasks and projects. (the root project)
+Pinned tasks should appear before unpinned tasks.
+A task is "Focused" if it has a due date within the next 5 days or work entries in the previous 3 days and is not completed. Focused tasks are placed at the top of the list after pinned tasks.
+Pinned Projects come next, and finally unpinned projects.
+
+In this view, projects are collapsed by default.
+
+There should be no reason to paginate: use infinite scroll (not in the MVP). 
+
+Clicking on a project should open a new tab showing only that project's contents.
+Clicking on a task should open a new tab showing that task's details, including a list of work entries.
+
+On wide-enough screens, the main view should be split into two columns:
+- The narrow left column is the list of tasks and projects (the root project).
+- The wide right column is the details of the selected task or project.
+
+The wide right column should be split into two rows:
+- The top row is the details of the selected task or project.
+- The bottom row is a list of the Project's children or the Task's work entries.
+
+## Documentation
+The MVP must include an onboarding tutorial that explains the essential features of the system and demonstrates how to use them. The tutorial must be accessible from the docs menu.
+
+
+## Notes to self
+
+Before you decide to allow converting a task to a project, consider what to do with the work entries associated with the task.
+
+Stretch goal: MVP should allow moving tasks and projects between projects, and assigning work entries to different tasks. This UI should be simple and easy to use—drag and drop can wait.
+
+Byte the bullet and use Convex. It's a good fit for this project.

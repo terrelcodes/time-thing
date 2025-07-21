@@ -29,11 +29,11 @@ A task is a larger unit of work—a container for work entries. It includes
 * a start date, (*may* be null if the task is not started yet)
 * an end date, (null if the task is not finished yet)
 * a due date, (may be null)
-* a parent project
+* a parent task (null if it is a top-level task)
 
 ## Labels/Tags
 
-A task or time entry can have zero or more labels/tags. In the UI, these can be added with hashtags in the description, or as a separate field. The database might store them as a list of strings or a many-to-many relationship.
+A Task or WorkEntry can have zero or more labels/tags. In the UI, these can be added with hashtags in the description, or as a separate field. The database might store them as a list of strings or a many-to-many relationship.
 
 ## Project
 
@@ -55,13 +55,11 @@ This is a many-to-many relationship.
 
 How is a Project related to a Task? Is a Project just a task with more metadata? Does it make sense in this context for a task to have sub-tasks, or is that the distinction: a Task is a leaf node in the hierarchy, and a Project is a container? Can something be stubbed as a task, and then later be expanded into a project?
 
-All of the fields are the same for a Task and a Project. A minor difference is that a Project has a time budget, and a Task has an estimated time—that is only a difference in interpretation. A Project is a container for tasks, and a Task is a container for time entries (work).
+Task and Project share the same schema. A minor difference is that a Project has a time budget, and a Task has an estimated time—but that is only a difference in interpretation. A Project is a container for tasks. A Task is a container for Work (WorkEntry).
 
 A Project has additional documentation, such as a charter, a plan, a roadmap, and associated stakeholders, but these are not needed for tracking time. Stakeholders are needed only for the communication system, which is separate from time tracking.
 
-Maybe we can add a "type" field to the "Workables" table, and use that to distinguish them??? at the very least, we should ensure that the primary key (id) is unique across Project and Task.
-
-Conclusion: a Project is a Task with more metadata that is not needed for tracking time. In the context of time tracking, a Task is a leaf node that contains only time entries (work).
+Conclusion: Project is a Task with more metadata that is not needed for tracking time. A ProjectID is a TaskID—they share a keyspace. In the context of time tracking, a Task is a leaf node that contains only Work (WorkEntry).
 
 ## Stakeholders
 
@@ -73,3 +71,31 @@ Stakeholders can be associated with a Project in the following ways:
 
 ## People
 A person is a user of the system. The system needs to know their name, email address, phone number, and avatar.
+
+What a person can do in a project/task depends on their role. 
+### Roles and Permissions
+
+Roles define what actions a person can perform within the system. The most common roles are:
+
+- **Admin**: Can manage all aspects of the system, including users, projects, tasks, and settings.
+- **Project Owner**: Has full control over a specific project, including editing project details, assigning roles, and archiving or deleting the project.
+- **Contributor/Member**: Can view and update tasks and work entries within projects they are assigned to, but cannot change project-level settings or manage other users.
+- **Viewer/Guest**: Can view projects and tasks but cannot make changes.
+
+#### Example of permitted actions by role:
+
+| Action                        | Admin | Project Owner | Contributor | Viewer |
+|-------------------------------|:-----:|:-------------:|:-----------:|:------:|
+| Create/Edit/Delete Project    |  ✔️   |      ✔️      |     ❌      |   ❌   |
+| Assign Roles                  |  ✔️   |      ✔️      |     ❌      |   ❌   |
+| Add/Edit/Delete Task          |  ✔️   |      ✔️      |     ✔️??    |   ❌   |
+| Log Work Entry                |  ✔️   |      ✔️      |     ✔️      |   ❌   |
+| Edit Work Entry (own)         |  ✔️   |      ✔️      |     ✔️      |   ❌   |
+| Edit Work Entry (others)      |  ✔️   |      ✔️      |     ❌      |   ❌   |
+| View Project/Task Details     |  ✔️   |      ✔️      |     ✔️      |   ✔️   |
+| Archive Project/Task          |  ✔️   |      ✔️      |     ❌      |   ❌   |
+| Manage Labels/Tags            |  ✔️   |      ✔️      |     ✔️      |   ❌   |
+
+Roles can be assigned per project, so a user may be a Project Owner in one project and a Contributor in another.
+
+**Note:** The system should enforce permissions at both the UI and API/database level to ensure data integrity and security.
