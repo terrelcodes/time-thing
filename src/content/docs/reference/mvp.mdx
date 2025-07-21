@@ -61,11 +61,13 @@ The UI should be simple and easy to use.
 The header bar includes any active WorkEntries. There should normally be only one. This is a quick way to see what the user is working on. `<Task/WorkEntry Name> <Elapsed Time> <Start/Stop>`
 
 The main view is a list of tasks and projects. (the root project)
-Pinned tasks should appear before unpinned tasks.
-A task is "Focused" if it has a due date within the next 5 days or work entries in the previous 3 days and is not completed. Focused tasks are placed at the top of the list after pinned tasks.
-Pinned Projects come next, and finally unpinned projects.
 
-In this view, projects are collapsed by default.
+Pinned tasks should appear first.
+A task is "Focused" if it has a due date within the next 5 days or work entries in the previous 3 days and is not completed. Focused tasks are placed after pinned tasks.
+Pinned projects come next.
+Unfocused projects and tasks follow.
+
+In this view, projects are collapsed by default. (except for the root project)
 
 There should be no reason to paginate: use infinite scroll (not in the MVP). 
 
